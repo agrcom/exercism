@@ -1,34 +1,20 @@
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static java.util.Collections.reverse;
 
 class HandshakeCalculator {
+        private static final int doReverse = 16;
 
-    /*
-    1 = wink
-10 = double blink
-100 = close your eyes
-1000 = jump
-     */
+        List<Signal> calculateHandshake(int number) {
 
-    private Map<String, Signal> secretSignals = ImmutableMap.of(
-            "1", Signal.WINK,
-            "10", Signal.DOUBLE_BLINK,
-            "100", Signal.CLOSE_YOUR_EYES,
-            "1000", Signal.JUMP);
+            List<Signal> result = Lists.newArrayList();
 
-    List<Signal> calculateHandshake(int number) {
+            for (Signal s : Signal.values()) {
+                if ((number & s.getCode()) != 0) result.add(s);
+            }
 
-        String binaryString = Integer.toBinaryString(number);
-        List<String> result = Lists.newArrayList();
-
-        if (number & 1 ^ 1 == 0) result.add("wink");
-
-        return Lists.newArrayList(secretSignals.get(binaryString));
-    }
-
+            if ((number & doReverse) != 0) reverse(result);
+            return result;
+        }
 }
